@@ -1,42 +1,122 @@
-setwd("~/Desktop/Online Coursera/Coursera-R-Programming/week2/")
-#getwd()
-#list.files()
 
-pollutantmean <- function(directory, pollutant = "sulfate", id = 1:332) {
-    ## 'directory' is a character vector of length 1 indicating
-    ## the location of the CSV files
-    
-    ## 'pollutant' is a character vector of length 1 indicating
-    ## the name of the pollutant for which we will calculate the
-    ## mean; either "sulfate" or "nitrate".
-    
-    ## 'id' is an integer vector indicating the monitor ID numbers
-    ## to be used
-    
-    ## Return the mean of the pollutant across all monitors list
-    ## in the 'id' vector (ignoring NA values)
-    
-    # set working directory
-    if(grep("specdata", directory) == 1) {
-        directory <- ("./specdata/")
-    }
-    # initialize a vector to hold the pollutant data
-    mean_vector <- c()
-    # find all files in the specdata folder
-    all_files <- as.character( list.files(directory) )
-    file_paths <- paste(directory, all_files, sep="")
-    for(i in id) {
-        current_file <- read.csv(file_paths[i], header=T, sep=",")
-        head(current_file)
-        pollutant
-        na_removed <- current_file[!is.na(current_file[, pollutant]), pollutant]
-        mean_vector <- c(mean_vector, na_removed)
-    }
-    result <- mean(mean_vector)
-    return(round(result, 3)) 
-}
+pollutantmean <- function(directory, pollutant, id) {
 
-# tests
-pollutantmean("specdata", "sulfate", 1:10) == 4.064
-pollutantmean("specdata", "nitrate", 70:72) == 1.706
-pollutantmean("specdata", "nitrate", 23) == 1.281
+setwd("/Users/shashankraina/")
+cur_dir<-getwd()
+spec_dir<-paste(cur_dir, directory, sep="/")
+setwd(spec_dir)
+#initiate variable
+count=0
+sum = 0
+summer=0
+addvalue=0
+average=0
+summer2=0
+#START
+for (i in id){
+  if (pollutant=="sulfate"){ 
+    if (i>-1 && i<10){
+      name<-paste("00",i,sep="")
+      name<-paste(name,".csv",sep="")
+      dataframe<-read.csv(name, header=TRUE) 
+      dataframe<-na.omit(dataframe)
+      sulfate_vector<-dataframe$sulfate
+      addvalue<-sum(sulfate_vector)
+      is.numeric(addvalue) 
+      summer = summer + addvalue
+      adder<-nrow(dataframe)
+      is.numeric(adder)
+      summer2 = summer2 + adder
+       
+      
+    }else if (i>9 && i<100){
+      
+      
+      name<-paste("0",i,sep="")
+      name<-paste(name,".csv",sep="")
+      dataframe<-read.csv(name, header=TRUE) 
+      dataframe<-na.omit(dataframe)
+      sulfate_vector<-dataframe$sulfate
+      addvalue<-sum(sulfate_vector)
+      is.numeric(addvalue)
+      summer = summer + addvalue
+      adder<-nrow(dataframe)
+      is.numeric(adder)
+      summer2 = summer2 + adder
+      
+    }else if(i>99 && i<332){
+      
+      
+      name<-paste("",i,sep="")
+      name<-paste(name,".csv",sep="")
+      dataframe<-read.csv(name, header=TRUE) 
+      dataframe<-na.omit(dataframe)
+      sulfate_vector<-dataframe$sulfate
+      addvalue<-sum(sulfate_vector)
+      is.numeric(addvalue)
+      summer = summer + addvalue
+      adder<-nrow(dataframe)
+      is.numeric(adder)
+      summer2 = summer2 + adder
+      
+    }
+    
+  }
+  else
+    {
+    
+    if (i>-1 && i<10){
+      
+      name<-paste("00",i,sep="")
+      name<-paste(name,".csv",sep="")
+      dataframe<-read.csv(name, header=TRUE)
+      dataframe<-na.omit(dataframe)
+      nitrate_vector<-dataframe$nitrate
+      addvalue<-sum(nitrate_vector)
+      is.numeric(addvalue)
+      summer = summer + addvalue
+      adder<-nrow(dataframe)
+      is.numeric(adder)
+      summer2 = summer2 + adder
+      
+    }else if (i>9 && i<100){
+      name<-paste("0",i,sep="")
+      name<-paste(name,".csv",sep="")
+      dataframe<- read.csv(name, header=TRUE)
+      dataframe<-na.omit(dataframe)
+      nitrate_vector<-dataframe$nitrate
+      addvalue<-sum(nitrate_vector)
+      is.numeric(addvalue)
+      summer = summer + addvalue
+      adder<-nrow(dataframe)
+      is.numeric(adder)
+      summer2 = summer2 + adder
+                            }
+    else if(i>99 && i<332){
+      name<-paste("",i,sep="")
+      name<-paste(name,".csv",sep="")
+      dataframe<- read.csv(name, header=TRUE)
+      dataframe<-na.omit(dataframe)
+      nitrate_vector<-dataframe$nitrate
+      addvalue<-sum(nitrate_vector)
+      is.numeric(addvalue)
+      summer = summer + addvalue
+      adder<-nrow(dataframe)
+      is.numeric(adder)
+      summer2 = summer2 + adder
+                           }
+    
+  }
+  
+} 
+            
+mean=summer/summer2
+return(mean)
+   }
+
+pollutantmean("specdata", "nitrate", 70:72)                                                                
+
+
+
+
+
