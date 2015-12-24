@@ -1,62 +1,34 @@
-setwd("~/Desktop/Online Coursera/Coursera-R-Programming/week4/")
-
-num_helper <- function(data, col_num, state, num) {
-    state_subset <- data[data[, 7]==state, ]
-    # get "attack", "failure" and "pneumonia" vector
-    outcome_arr <- state_subset[, col_num]
-    len <- dim(state_subset[!is.na(outcome_arr), ])[1]
-    if (num == "worst") {
-        rank <- rank_helper(state_subset, outcome_arr, len)
-    } else if (num > len) {
-        rank <- NA
-    } else {
-        rank <- rank_helper(state_subset, outcome_arr, num)
-    }
-    result <- rank
-    return(result)
-}
-
-rank_helper <- function(state_subset, outcome_arr, num) {
-    result <- state_subset[, 2][order(outcome_arr, state_subset[, 2])[num]]
-    return(result)
-}
+## rankhospital.R
 
 rankhospital <- function(state, outcome, num = "best") {
-    ## Read outcome data
-    ## Check that state and outcome are valid
-    ## Return hospital name in that state with the given rank
-    ## 30-day death rate
-    
-    # read the data file
-    directory <- "./data/outcome-of-care-measures.csv"
-    data <- read.csv(directory, colClasses="character")
-    # change data type from character to numeric
-    data[, 11] <- as.numeric(data[, 11]) # heart attack
-    data[, 17] <- as.numeric(data[, 17]) # heart failure
-    data[, 23] <- as.numeric(data[, 23]) # pneumonia
-    valid_outcomes <- c("heart attack", "heart failure", "pneumonia")
-    if (!state %in% data$State) {
-        stop("invalid state")
-    } else if(!outcome %in% valid_outcomes) {
-        stop("invalid outcome")
-    } else {
-        if (num == "best") {
-            rank <- beast(state, outcome)
-        } else {
-            if(outcome == "heart attack") {
-                rank <- num_helper(data, 11, state, num) 
-            } else if(outcome == "heart failure") {
-                rank <- num_helper(data, 17, state, num) 
-            } else {
-                rank <- num_helper(data, 23, state, num) 
-            }
-        }
-        result <- rank
-        return(result)
-    }
+  ## Read outcome data
+  setwd("/Users/shashankraina/desktop/ass3")
+  data <- read.csv("/Users/shashankraina/desktop/ass3/outcome-of-care-measures.csv", colClasses = "character",na.strings="Not Available")
+  
+  ## Check that state and outcome are valid
+  validOutcome = c("heart attack","heart failure","pneumonia")
+  if (!outcome %in% validOutcome) { stop("invalid outcome")}
+  
+  validState = unique(data[,7])
+  if (!state %in% validState) stop("invalid state")
+  
+  ## convert outcome name into column name
+  fullColName <- c("Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack", "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure", "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
+  colName <- fullColName[match(outcome,validOutcome)]
+  
+  ## Return hospital name in that state with the given rank 30-day death rate
+  data.state <- data[data$State==state,]
+  
+  # order data by outcome
+  sorted.data.state <- data.state[order(as.numeric(data.state[[colName]]),data.state[["Hospital.Name"]],decreasing=FALSE,na.last=NA), ]
+  
+  #handle num input
+  if (num=="best") num = 1
+  if (num=='worst') num = nrow(sorted.data.state)
+  #will automatically return NA if num > nrow, as well as if it's some other text value
+  # if someone passes num < 1, they'll get what's expected
+  #if (is.numeric(num) & num > nrwo(sorted.data.state) return(NA)
+  
+  sorted.data.state[num,"Hospital.Name"]
 }
 
-# tests
-rankhospital("MN", "heart attack", 5000)
-rankhospital("MD", "heart attack", "worst")
-rankhospital("TX", "heart failure", 4)
