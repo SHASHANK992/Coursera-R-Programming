@@ -1,0 +1,24 @@
+
+complete <- function(directory, id=1:332) {
+        setwd("/Users/shashankraina")
+        current<-getwd()
+        current<-paste(current,directory,sep="/")
+        setwd(current)
+        q<-data.frame(id=numeric(),nobs=numeric())
+        l<-list.files(current)
+        ln<-length(id)
+        for (i in 1:ln){
+                s<-0
+                d<-read.csv(l[id[i]])
+                r<-complete.cases(d)
+                for (j in 1:nrow(d)){
+                        if (r[j]=='TRUE'){
+                                s<-s+1
+                        }
+                }
+                q[i,1]<-id[i]
+                q[i,2]<-s
+        }
+        print.data.frame(q)
+}
+#complete('specdata',c(1:332))
