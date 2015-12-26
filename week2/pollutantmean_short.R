@@ -14,15 +14,13 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
         else if (i>=10 & i<100) { 
                 data <- read.csv(paste("0", as.character(i), ".csv", sep=""),  ## for example, if 'id' = 17, we get 017.csv
                                  header = T, 
-                                 na.strings=c("NA","NaN", " ") 
-                )
+                                 na.strings=c("NA","NaN", " "))
         }
         
         else       { 
                 data <- read.csv(paste(as.character(i), ".csv", sep=""),     ## Normal
                                  header = T, 
-                                 na.strings=c("NA","NaN", " ") 
-                )
+                                 na.strings=c("NA","NaN", " "))
         }
         
         data = na.omit(data)    
